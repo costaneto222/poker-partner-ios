@@ -5,19 +5,13 @@ workflows:
     instance_type: mac_mini_m2
 
     integrations:
-      # After creating API key in App Store Connect, add it to Codemagic under
-      # Teams → Integrations → Developer Portal and name it "PokerPartnerASC"
       app_store_connect: PokerPartnerASC
 
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.costa.pokerpartner
       vars:
         XCODE_PROJECT: "PokerPartnerHUD.xcodeproj"
         XCODE_SCHEME: "PokerPartnerHUD"
-        # Set APP_STORE_APPLE_ID in Codemagic environment variables after
-        # creating the app in App Store Connect (numeric app ID, e.g. "1234567890")
+        BUNDLE_ID: "com.costa.pokerpartner"
         APP_STORE_APPLE_ID: $APP_STORE_APPLE_ID
       xcode: latest
 
@@ -39,12 +33,23 @@ workflows:
           cd $CM_BUILD_DIR
           xcodegen generate
 
-      - name: Set build number
+      - name: Fetch signing files (creates cert + profile if missing)
         script: |
-          #!/bin/sh
-          set -e
-          # Use Codemagic's auto-incremented build number
-          agvtool new-version -all $BUILD_NUMBER
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+
+      - name: Set up keychain
+        script: keychain initialize
+
+      - name: Add certificates to keychain
+        script: keychain add-certificates
+
+      - name: Use provisioning profiles
+        script: xcode-project use-profiles
+
+      - name: Set build number
+        script: agvtool new-version -all $BUILD_NUMBER
 
       - name: Build IPA
         script: |
