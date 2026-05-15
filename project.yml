@@ -1,0 +1,53 @@
+name: PokerPartnerHUD
+
+options:
+  bundleIdPrefix: com.costa
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1"
+    ENABLE_BITCODE: NO
+
+targets:
+  PokerPartnerHUD:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+
+    sources:
+      - path: PokerPartnerHUD
+
+    resources:
+      - path: PokerPartnerHUD/Assets.xcassets
+
+    info:
+      path: PokerPartnerHUD/Info.plist
+      properties:
+        CFBundleDisplayName: PokerHUD
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        NSCameraUsageDescription: "Aponta para a tela do PokerStars para ler pote, call e cartas automaticamente."
+        UIRequiresFullScreen: true
+        UIStatusBarHidden: false
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.costa.pokerpartner
+        DEVELOPMENT_TEAM: 5EUJQUFBHT
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "iPhone Distribution"
+        INFOPLIST_FILE: PokerPartnerHUD/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
