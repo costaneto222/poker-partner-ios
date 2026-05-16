@@ -36,11 +36,12 @@ workflows:
       - name: Set up keychain
         script: keychain initialize
 
-      - name: Generate private key for signing certificate
+      - name: Write persistent private key from env var
         script: |
-          ssh-keygen -t rsa -b 2048 -m PEM -f ~/cert_key -q -N ""
+          echo "$CERTIFICATE_PRIVATE_KEY" > $HOME/cert_key
+          chmod 600 $HOME/cert_key
 
-      - name: Fetch signing files (creates cert + profile if missing)
+      - name: Fetch signing files (reuses cert tied to persistent key)
         script: |
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
